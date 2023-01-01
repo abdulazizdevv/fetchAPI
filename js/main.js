@@ -7,6 +7,7 @@ let inputVal = elInput.value;
 let newArr = [];
 
 const render = (arr, node) => {
+  node.innerHTML = [];
   for (i of arr) {
     const newItem = document.createElement("li");
     const newBox = document.createElement("div");
@@ -47,6 +48,4 @@ elForm.addEventListener("submit", (evt) => {
       }
     });
   elInput.value = "";
-
 });
-
