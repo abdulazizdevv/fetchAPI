@@ -1,6 +1,9 @@
 let elList = document.querySelector(".list");
 let elInput = document.querySelector("input");
 let elForm = document.querySelector("form");
+let elPreveBtn = document.querySelector(".preve-btn");
+let elNextBtn = document.querySelector(".next-btn");
+let page = 1;
 
 let inputVal = elInput.value;
 
@@ -40,12 +43,38 @@ const render = (arr, node) => {
 
 elForm.addEventListener("submit", (evt) => {
   evt.preventDefault();
-  fetch(`https://www.omdbapi.com/?apikey=4027b6ec&s=${elInput.value}`)
+  if (elInput.value !== "") {
+    fetchFunc();
+  }
+});
+
+function fetchFunc() {
+  if (page == 1) {
+    elPreveBtn.setAttribute("disabled", "true");
+  } else {
+    elPreveBtn.removeAttribute("disabled");
+  }
+  fetch(
+    `https://www.omdbapi.com/?apikey=4027b6ec&s=${elInput.value}&page=${page}`
+  )
     .then((response) => response.json())
     .then((data) => {
       if (data) {
         render(data.Search, elList);
       }
+      if (page == Math.ceil(data.totalResult / 10)) {
+        elNextBtn.setAttribute("disabled", "true");
+      } else {
+        elNextBtn.removeAttribute("disabled");
+      }
     });
-  elInput.value = "";
+}
+
+elPreveBtn.addEventListener("click", () => {
+  page--;
+  fetchFunc();
+});
+elNextBtn.addEventListener("click", () => {
+  page++;
+  fetchFunc();
 });
